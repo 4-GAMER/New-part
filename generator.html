@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4GAMER - مولد صفحات التحميل</title>
+    <link rel="stylesheet" href="generator-style.css">
+</head>
+<body>
+    <div class="generator-container">
+        <!-- الهيدر -->
+        <header class="generator-header">
+            <h1>🎮 4GAMER - مولد صفحات التحميل</h1>
+            <p>أنشئ صفحة تحميل احترافية مشابهة لتصميم 4GAMER</p>
+        </header>
+
+        <!-- قسم الإدخال -->
+        <section class="input-section">
+            <!-- معلومات الملف الأساسية -->
+            <div class="form-group">
+                <label for="gameName">🎯 اسم اللعبة/الملف:</label>
+                <input type="text" id="gameName" placeholder="مثال: A Plague Tale Innocence" value="A Plague Tale Innocence">
+            </div>
+
+            <div class="form-group">
+                <label for="fileExtension">📦 نوع الملف:</label>
+                <select id="fileExtension">
+                    <option value="pkg">PKG</option>
+                    <option value="zip">ZIP</option>
+                    <option value="rar">RAR</option>
+                    <option value="iso">ISO</option>
+                    <option value="exe">EXE</option>
+                </select>
+            </div>
+
+            <!-- إدارة البارتات -->
+            <div class="form-group">
+                <label>🔢 إدارة البارتات:</label>
+                <div class="actions-row">
+                    <button type="button" class="btn-primary" onclick="addPart()">➕ إضافة بارت</button>
+                    <button type="button" class="btn-secondary" onclick="removePart()">➖ حذف بارت</button>
+                </div>
+            </div>
+
+            <!-- قائمة البارتات -->
+            <div class="parts-management">
+                <h3>📋 البارتات المضافة:</h3>
+                <div class="parts-list" id="partsList">
+                    <!-- البارتات تضاف هنا -->
+                </div>
+            </div>
+
+            <!-- الحجم الكلي -->
+            <div class="total-size-display" id="totalSizeDisplay">
+                الحجم الكلي: <span id="totalSizeValue">0.00</span> GB
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="control-buttons">
+                <button type="button" class="btn-import" onclick="importConfig()">📥 استيراد إعدادات</button>
+                <button type="button" class="btn-export" onclick="exportConfig()">📤 تصدير إعدادات</button>
+                <button type="button" class="btn-generate" onclick="generatePage()">⚡ توليد الصفحة</button>
+            </div>
+        </section>
+
+        <!-- قسم المعاينة -->
+        <section class="preview-section">
+            <h2>👁️ معاينة الصفحة الناتجة</h2>
+            <div class="preview-container">
+                <div class="preview-actions">
+                    <button type="button" class="btn-copy" onclick="copyCode()">📋 نسخ الكود</button>
+                    <button type="button" class="btn-test" onclick="testPage()">🧪 اختبار الصفحة</button>
+                </div>
+                <div class="code-preview" id="codePreview">
+                    <!-- الكود الناتج يظهر هنا -->
+                    <div class="placeholder">
+                        <p>✨ الصفحة الناتجة ستظهر هنا</p>
+                        <p>قم بتعبئة البيانات واضغط على "توليد الصفحة"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- الفوتر -->
+        <footer class="generator-footer">
+            <p>&copy; 2025 <a href="https://t.me/C9_9M" target="_blank">4GAMER</a>. جميع الحقوق محفوظة.</p>
+        </footer>
+    </div>
+
+    <!-- نافذة اختبار الصفحة -->
+    <div id="testModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTestModal()">&times;</span>
+            <h3>🧪 اختبار الصفحة الناتجة</h3>
+            <div class="modal-iframe-container">
+                <iframe id="testIframe" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="generator-script.js"></script>
+</body>
+</html>
