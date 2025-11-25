@@ -2,17 +2,22 @@ class PageGenerator {
     constructor() {
         this.parts = [];
         this.partsCount = 0;
+        this.isMobile = this.checkMobile();
         this.init();
     }
     
+    checkMobile() {
+        return window.innerWidth <= 768;
+    }
+    
     init() {
+        console.log('📱 الجهاز:', this.isMobile ? 'جوال' : 'كمبيوتر');
         this.loadInitialData();
         this.renderPartsList();
         this.calculateTotalSize();
     }
     
     loadInitialData() {
-        // بيانات أولية افتراضية
         this.parts = [
             {
                 id: 'part1',
@@ -34,12 +39,25 @@ class PageGenerator {
     
     renderPartsList() {
         const partsList = document.getElementById('partsList');
+        if (!partsList) {
+            console.error('❌ partsList element not found!');
+            setTimeout(() => this.renderPartsList(), 100);
+            return;
+        }
+        
         partsList.innerHTML = '';
+        
+        if (this.parts.length === 0) {
+            partsList.innerHTML = '<div class="no-parts">لا توجد بارتات مضافة</div>';
+            return;
+        }
         
         this.parts.forEach((part, index) => {
             const partElement = this.createPartElement(part, index);
             partsList.appendChild(partElement);
         });
+        
+        console.log(`✅ تم عرض ${this.parts.length} بارت`);
     }
     
     createPartElement(part, index) {
@@ -90,6 +108,19 @@ class PageGenerator {
         this.parts.push(newPart);
         this.renderPartsList();
         this.calculateTotalSize();
+        
+        if (this.isMobile) {
+            this.scrollToLastPart();
+        }
+    }
+    
+    scrollToLastPart() {
+        setTimeout(() => {
+            const lastPart = document.querySelector('.part-item:last-child');
+            if (lastPart) {
+                lastPart.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }, 100);
     }
     
     removePart() {
@@ -98,6 +129,8 @@ class PageGenerator {
             this.partsCount--;
             this.renderPartsList();
             this.calculateTotalSize();
+        } else {
+            this.showMobileAlert('⚠️ لا توجد بارتات للحذف');
         }
     }
     
@@ -113,6 +146,7 @@ class PageGenerator {
         this.parts.forEach((part, index) => {
             part.name = `البارت ${index + 1}`;
         });
+        this.partsCount = this.parts.length;
         this.renderPartsList();
     }
     
@@ -153,7 +187,18 @@ class PageGenerator {
             totalSizeGB += size;
         });
         
-        document.getElementById('totalSizeValue').textContent = totalSizeGB.toFixed(2);
+        const totalSizeElement = document.getElementById('totalSizeValue');
+        if (totalSizeElement) {
+            totalSizeElement.textContent = totalSizeGB.toFixed(2);
+        }
+    }
+    
+    showMobileAlert(message) {
+        if (this.isMobile) {
+            alert(message);
+        } else {
+            console.log(message);
+        }
     }
     
     generatePage() {
@@ -184,6 +229,10 @@ ${jsCode}
 </html>`;
         
         document.getElementById('codePreview').textContent = fullCode;
+        
+        if (this.isMobile) {
+            this.showMobileAlert('✅ تم توليد الصفحة بنجاح!');
+        }
     }
     
     generateHTMLCode(fileName) {
@@ -266,12 +315,13 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, rgb(0, 18, 10) 0%, rgb(0, 8, 9) 100%);
     min-height: 100vh;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #f0f0f0;
+    line-height: 1.6;
 }
 
 .container {
@@ -284,21 +334,23 @@ body {
 /* Header */
 .main-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     color: white;
+    padding: 0 10px;
 }
 
 .main-header h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     margin-bottom: 20px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    word-wrap: break-word;
 }
 
 .overall-progress {
     background: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    padding: 20px;
+    padding: clamp(15px, 3vw, 20px);
     max-width: 400px;
     margin: 0 auto;
 }
@@ -308,6 +360,7 @@ body {
     justify-content: space-between;
     margin-bottom: 10px;
     font-weight: bold;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
 }
 
 .progress-bar {
@@ -330,8 +383,8 @@ body {
     background: rgba(255,255,255,0.08);
     backdrop-filter: blur(5px);
     border-radius: 15px;
-    padding: 20px;
-    margin: 30px auto;
+    padding: clamp(15px, 3vw, 20px);
+    margin: 25px auto;
     max-width: 600px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -342,7 +395,7 @@ body {
 
 .file-name-display,
 .total-size-display {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
     font-weight: 500;
     color: #eee;
 }
@@ -359,12 +412,20 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
     padding: 20px 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .parts-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 }
 
 .part-card {
     background: rgba(255,255,255,0.05);
     border-radius: 15px;
-    padding: 20px;
+    padding: clamp(15px, 3vw, 20px);
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255,255,255,0.1);
@@ -401,8 +462,8 @@ body {
 }
 
 .part-number {
-    width: 40px;
-    height: 40px;
+    width: clamp(35px, 8vw, 40px);
+    height: clamp(35px, 8vw, 40px);
     border-radius: 50%;
     background: rgb(0, 107, 15);
     color: white;
@@ -410,20 +471,20 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     margin-left: 10px;
     flex-shrink: 0;
 }
 
 .part-info h3 {
     color: white;
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
     margin-bottom: 3px;
 }
 
 .part-size {
     color: #bbb;
-    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 2vw, 0.8rem);
 }
 
 .download-section {
@@ -435,13 +496,13 @@ body {
 }
 
 .download-btn {
-    width: 45px;
-    height: 45px;
+    width: clamp(40px, 9vw, 45px);
+    height: clamp(40px, 9vw, 45px);
     border: none;
     border-radius: 50%;
     background: rgb(22, 185, 31);
     color: white;
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 10px;
@@ -449,6 +510,7 @@ body {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    min-height: 44px;
 }
 
 .download-btn:hover {
@@ -464,7 +526,7 @@ body {
     color: #bbb;
     font-weight: 500;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
 /* Downloaded State */
@@ -509,11 +571,12 @@ body {
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 1rem;
+    padding: clamp(10px, 2.5vw, 12px) clamp(15px, 3vw, 20px);
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+    min-height: 44px;
 }
 
 .reset-btn:hover {
@@ -528,10 +591,11 @@ body {
 
 /* Footer */
 .footer {
-    margin-top: 40px;
+    margin-top: 30px;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
     color: #aaa;
+    padding: 0 10px;
 }
 
 .footer a {
@@ -544,45 +608,18 @@ body {
     text-decoration: underline;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .parts-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+    .download-btn:hover {
+        transform: none;
     }
     
-    .main-header h1 {
-        font-size: 2rem;
+    .part-card:hover {
+        transform: none;
     }
     
-    .part-card {
-        padding: 15px;
-    }
-
-    .part-number {
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
-    }
-
-    .part-info h3 {
-        font-size: 1rem;
-    }
-
-    .download-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-
-    .reset-btn {
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
-
-    .file-info-section {
-        padding: 15px;
-        font-size: 1rem;
+    button:active {
+        transform: scale(0.98);
     }
 }
 
@@ -600,46 +637,15 @@ body {
     }
 
     .part-card {
-        padding: 10px;
+        padding: 12px;
     }
 
     .part-header {
-        margin-bottom: 10px;
-    }
-
-    .part-number {
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
-        margin-left: 8px;
-    }
-
-    .part-info h3 {
-        font-size: 0.9rem;
-    }
-
-    .part-size {
-        font-size: 0.75rem;
-    }
-
-    .download-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
-    }
-
-    .status-text {
-        font-size: 0.8rem;
-    }
-
-    .reset-btn {
-        padding: 7px 12px;
-        font-size: 0.8rem;
+        margin-bottom: 12px;
     }
 
     .file-info-section {
-        padding: 10px;
-        font-size: 0.9rem;
+        padding: 12px;
     }
 }`;
     }
@@ -814,6 +820,8 @@ window.addEventListener('DOMContentLoaded', () => {
         a.download = '4gamer-page-config.json';
         a.click();
         URL.revokeObjectURL(url);
+        
+        this.showMobileAlert('✅ تم تصدير الإعدادات');
     }
     
     importConfig() {
@@ -846,7 +854,7 @@ window.addEventListener('DOMContentLoaded', () => {
         this.renderPartsList();
         this.calculateTotalSize();
         
-        alert('✅ تم تحميل الإعدادات بنجاح!');
+        this.showMobileAlert('✅ تم تحميل الإعدادات بنجاح!');
     }
 }
 
@@ -865,6 +873,10 @@ function generatePage() {
 
 function copyCode() {
     const code = document.getElementById('codePreview').textContent;
+    if (!code || code.includes('الصفحة الناتجة')) {
+        alert('❌ يرجى توليد الصفحة أولاً!');
+        return;
+    }
     navigator.clipboard.writeText(code).then(() => {
         alert('✅ تم نسخ الكود بنجاح!');
     });
@@ -901,6 +913,13 @@ function importConfig() {
 
 // تهيئة التطبيق
 let pageGenerator;
-window.addEventListener('DOMContentLoaded', () => {
-    pageGenerator = new PageGenerator();
-});
+window.onload = function() {
+    console.log('🚀 تم تحميل الصفحة - بدء تهيئة المولد');
+    try {
+        pageGenerator = new PageGenerator();
+        console.log('✅ المولد جاهز للاستخدام');
+    } catch (error) {
+        console.error('❌ خطأ في تهيئة المولد:', error);
+        alert('حدث خطأ في تحميل المولد، يرجى تحديث الصفحة');
+    }
+};
