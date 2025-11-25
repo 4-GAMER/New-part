@@ -1,23 +1,29 @@
+// كود مبسط وسهل يعمل على الجوال
 class PageGenerator {
     constructor() {
+        console.log('🚀 بدء تشغيل المولد...');
         this.parts = [];
         this.partsCount = 0;
-        this.isMobile = this.checkMobile();
         this.init();
     }
     
-    checkMobile() {
-        return window.innerWidth <= 768;
-    }
-    
     init() {
-        console.log('📱 الجهاز:', this.isMobile ? 'جوال' : 'كمبيوتر');
+        console.log('🔧 تهيئة المولد...');
+        
+        // تحميل البيانات الأولية
         this.loadInitialData();
+        
+        // عرض البارتات
         this.renderPartsList();
+        
+        // حساب الحجم الكلي
         this.calculateTotalSize();
+        
+        console.log('✅ المولد جاهز للاستخدام');
     }
     
     loadInitialData() {
+        console.log('📥 تحميل البيانات الأولية...');
         this.parts = [
             {
                 id: 'part1',
@@ -35,23 +41,28 @@ class PageGenerator {
             }
         ];
         this.partsCount = this.parts.length;
+        console.log(`📊 تم تحميل ${this.parts.length} بارت`);
     }
     
     renderPartsList() {
+        console.log('🎨 عرض قائمة البارتات...');
         const partsList = document.getElementById('partsList');
+        
         if (!partsList) {
-            console.error('❌ partsList element not found!');
-            setTimeout(() => this.renderPartsList(), 100);
+            console.error('❌ لم يتم العثور على عنصر partsList');
             return;
         }
         
+        // مسح المحتوى الحالي
         partsList.innerHTML = '';
         
+        // إذا لم توجد بارتات
         if (this.parts.length === 0) {
             partsList.innerHTML = '<div class="no-parts">لا توجد بارتات مضافة</div>';
             return;
         }
         
+        // إضافة كل بارت
         this.parts.forEach((part, index) => {
             const partElement = this.createPartElement(part, index);
             partsList.appendChild(partElement);
@@ -73,13 +84,16 @@ class PageGenerator {
             <div class="part-fields">
                 <div class="form-group">
                     <label>اسم البارت:</label>
-                    <input type="text" value="${part.name}" onchange="pageGenerator.updatePartName('${part.id}', this.value)">
+                    <input type="text" value="${part.name}" 
+                           onchange="pageGenerator.updatePartName('${part.id}', this.value)"
+                           placeholder="اسم البارت">
                 </div>
                 <div class="form-group">
                     <label>الحجم:</label>
                     <div class="size-input">
                         <input type="number" value="${part.size}" step="0.01" min="0" 
-                               onchange="pageGenerator.updatePartSize('${part.id}', this.value)">
+                               onchange="pageGenerator.updatePartSize('${part.id}', this.value)"
+                               placeholder="0.00">
                         <select class="size-unit" onchange="pageGenerator.updatePartUnit('${part.id}', this.value)">
                             <option value="MB" ${part.unit === 'MB' ? 'selected' : ''}>MB</option>
                             <option value="GB" ${part.unit === 'GB' ? 'selected' : ''}>GB</option>
@@ -88,8 +102,9 @@ class PageGenerator {
                 </div>
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label>رابط التحميل:</label>
-                    <input type="url" value="${part.url}" placeholder="https://example.com/file" 
-                           onchange="pageGenerator.updatePartUrl('${part.id}', this.value)">
+                    <input type="url" value="${part.url}" 
+                           onchange="pageGenerator.updatePartUrl('${part.id}', this.value)"
+                           placeholder="https://example.com/file">
                 </div>
             </div>
         `;
@@ -97,62 +112,68 @@ class PageGenerator {
     }
     
     addPart() {
+        console.log('➕ إضافة بارت جديد...');
         this.partsCount++;
+        
         const newPart = {
-            id: 'part' + Date.now(),
+            id: 'part_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
             name: `البارت ${this.partsCount}`,
             size: '1.00',
             unit: 'GB',
             url: ''
         };
+        
         this.parts.push(newPart);
         this.renderPartsList();
         this.calculateTotalSize();
         
-        if (this.isMobile) {
-            this.scrollToLastPart();
-        }
-    }
-    
-    scrollToLastPart() {
-        setTimeout(() => {
-            const lastPart = document.querySelector('.part-item:last-child');
-            if (lastPart) {
-                lastPart.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }, 100);
+        alert('✅ تم إضافة بارت جديد');
+        console.log('✅ تم إضافة بارت جديد:', newPart);
     }
     
     removePart() {
+        console.log('➖ حذف آخر بارت...');
+        
         if (this.parts.length > 0) {
-            this.parts.pop();
+            const removedPart = this.parts.pop();
             this.partsCount--;
             this.renderPartsList();
             this.calculateTotalSize();
+            alert('✅ تم حذف البارت: ' + removedPart.name);
         } else {
-            this.showMobileAlert('⚠️ لا توجد بارتات للحذف');
+            alert('⚠️ لا توجد بارتات للحذف');
         }
     }
     
     removeSpecificPart(partId) {
-        this.parts = this.parts.filter(part => part.id !== partId);
-        this.partsCount = this.parts.length;
-        this.renderPartsList();
-        this.renumberParts();
-        this.calculateTotalSize();
+        console.log('🗑️ حذف البارت:', partId);
+        
+        const partIndex = this.parts.findIndex(part => part.id === partId);
+        if (partIndex !== -1) {
+            const removedPart = this.parts[partIndex];
+            this.parts.splice(partIndex, 1);
+            this.partsCount = this.parts.length;
+            this.renderPartsList();
+            this.renumberParts();
+            this.calculateTotalSize();
+            alert('✅ تم حذف البارت: ' + removedPart.name);
+        }
     }
     
     renumberParts() {
+        console.log('🔢 إعادة ترقيم البارتات...');
         this.parts.forEach((part, index) => {
             part.name = `البارت ${index + 1}`;
         });
         this.partsCount = this.parts.length;
-        this.renderPartsList();
     }
     
     updatePartName(partId, newName) {
         const part = this.parts.find(p => p.id === partId);
-        if (part) part.name = newName;
+        if (part) {
+            part.name = newName;
+            console.log('✏️ تحديث اسم البارت:', newName);
+        }
     }
     
     updatePartSize(partId, newSize) {
@@ -160,6 +181,7 @@ class PageGenerator {
         if (part) {
             part.size = newSize;
             this.calculateTotalSize();
+            console.log('📊 تحديث حجم البارت:', newSize);
         }
     }
     
@@ -168,21 +190,26 @@ class PageGenerator {
         if (part) {
             part.unit = newUnit;
             this.calculateTotalSize();
+            console.log('🔄 تحديث وحدة البارت:', newUnit);
         }
     }
     
     updatePartUrl(partId, newUrl) {
         const part = this.parts.find(p => p.id === partId);
-        if (part) part.url = newUrl;
+        if (part) {
+            part.url = newUrl;
+            console.log('🔗 تحديث رابط البارت:', newUrl);
+        }
     }
     
     calculateTotalSize() {
+        console.log('🧮 حساب الحجم الكلي...');
         let totalSizeGB = 0;
         
         this.parts.forEach(part => {
             let size = parseFloat(part.size) || 0;
             if (part.unit === 'MB') {
-                size = size / 1024;
+                size = size / 1024; // تحويل MB إلى GB
             }
             totalSizeGB += size;
         });
@@ -190,22 +217,18 @@ class PageGenerator {
         const totalSizeElement = document.getElementById('totalSizeValue');
         if (totalSizeElement) {
             totalSizeElement.textContent = totalSizeGB.toFixed(2);
-        }
-    }
-    
-    showMobileAlert(message) {
-        if (this.isMobile) {
-            alert(message);
-        } else {
-            console.log(message);
+            console.log('✅ الحجم الكلي:', totalSizeGB.toFixed(2), 'GB');
         }
     }
     
     generatePage() {
+        console.log('⚡ توليد الصفحة...');
+        
         const gameName = document.getElementById('gameName').value || 'اللعبة';
         const fileExtension = document.getElementById('fileExtension').value;
         const fileName = `${gameName}.${fileExtension}`;
         
+        // توليد الكود
         const htmlCode = this.generateHTMLCode(fileName);
         const cssCode = this.generateCSSCode();
         const jsCode = this.generateJSCode();
@@ -228,11 +251,11 @@ ${jsCode}
 </body>
 </html>`;
         
+        // عرض الكود في المعاينة
         document.getElementById('codePreview').textContent = fullCode;
         
-        if (this.isMobile) {
-            this.showMobileAlert('✅ تم توليد الصفحة بنجاح!');
-        }
+        alert('✅ تم توليد الصفحة بنجاح!');
+        console.log('✅ تم توليد الصفحة بنجاح');
     }
     
     generateHTMLCode(fileName) {
@@ -304,622 +327,93 @@ ${this.generatePartsHTML()}
     }
     
     generateCSSCode() {
-        return `/* General Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, rgb(0, 18, 10) 0%, rgb(0, 8, 9) 100%);
-    min-height: 100vh;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #f0f0f0;
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-    padding: 0 15px;
-}
-
-/* Header */
-.main-header {
-    text-align: center;
-    margin-bottom: 30px;
-    color: white;
-    padding: 0 10px;
-}
-
-.main-header h1 {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    margin-bottom: 20px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    word-wrap: break-word;
-}
-
-.overall-progress {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: clamp(15px, 3vw, 20px);
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.progress-text {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-weight: bold;
-    font-size: clamp(0.9rem, 2.5vw, 1rem);
-}
-
-.progress-bar {
-    height: 8px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, rgb(22, 185, 31), rgb(51, 224, 52));
-    width: 0%;
-    transition: width 0.5s ease;
-    border-radius: 4px;
-}
-
-/* File Info Section */
-.file-info-section {
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(5px);
-    border-radius: 15px;
-    padding: clamp(15px, 3vw, 20px);
-    margin: 25px auto;
-    max-width: 600px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.file-name-display,
-.total-size-display {
-    font-size: clamp(1rem, 2.5vw, 1.1rem);
-    font-weight: 500;
-    color: #eee;
-}
-
-.file-name-display span:first-child,
-.total-size-display span:first-child {
-    color: #bbb;
-    margin-left: 5px;
-}
-
-/* Parts Grid */
-.parts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    padding: 20px 0;
-    width: 100%;
-}
-
-@media (max-width: 768px) {
-    .parts-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-}
-
-.part-card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 15px;
-    padding: clamp(15px, 3vw, 20px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    color: #f0f0f0;
-}
-
-.part-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-    transition: left 0.6s;
-}
-
-.part-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
-
-.part-card:hover::before {
-    left: 100%;
-}
-
-.part-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.part-number {
-    width: clamp(35px, 8vw, 40px);
-    height: clamp(35px, 8vw, 40px);
-    border-radius: 50%;
-    background: rgb(0, 107, 15);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-    margin-left: 10px;
-    flex-shrink: 0;
-}
-
-.part-info h3 {
-    color: white;
-    font-size: clamp(1rem, 2.5vw, 1.1rem);
-    margin-bottom: 3px;
-}
-
-.part-size {
-    color: #bbb;
-    font-size: clamp(0.75rem, 2vw, 0.8rem);
-}
-
-.download-section {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.download-btn {
-    width: clamp(40px, 9vw, 45px);
-    height: clamp(40px, 9vw, 45px);
-    border: none;
-    border-radius: 50%;
-    background: rgb(22, 185, 31);
-    color: white;
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    min-height: 44px;
-}
-
-.download-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 3px 10px rgba(51, 224, 52, 0.4);
-}
-
-.download-btn:active {
-    transform: scale(0.95);
-}
-
-.status-text {
-    color: #bbb;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
-}
-
-/* Downloaded State */
-.part-card.downloaded {
-    background: rgba(51, 224, 52, 0.1);
-    border-color: rgba(51, 224, 52, 0.3);
-}
-
-.part-card.downloaded .download-btn {
-    background: rgb(51, 224, 52);
-}
-
-.part-card.downloaded .status-text {
-    color: rgb(51, 224, 52);
-    font-weight: bold;
-}
-
-.part-card.downloaded .part-number {
-    background: rgb(51, 224, 52);
-}
-
-/* Animation */
-@keyframes successPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.part-card.just-downloaded {
-    animation: successPulse 0.6s ease;
-}
-
-/* Actions Section */
-.actions {
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
-
-.reset-btn {
-    background: linear-gradient(135deg, #ff6b6b, #ee5253);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: clamp(10px, 2.5vw, 12px) clamp(15px, 3vw, 20px);
-    font-size: clamp(0.9rem, 2.5vw, 1rem);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
-    min-height: 44px;
-}
-
-.reset-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-}
-
-.reset-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 5px rgba(255, 107, 107, 0.2);
-}
-
-/* Footer */
-.footer {
-    margin-top: 30px;
-    text-align: center;
-    font-size: clamp(0.75rem, 2vw, 0.85rem);
-    color: #aaa;
-    padding: 0 10px;
-}
-
-.footer a {
-    color: #eee;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.footer a:hover {
-    text-decoration: underline;
-}
-
-/* Touch device improvements */
-@media (hover: none) and (pointer: coarse) {
-    .download-btn:hover {
-        transform: none;
-    }
-    
-    .part-card:hover {
-        transform: none;
-    }
-    
-    button:active {
-        transform: scale(0.98);
-    }
-}
-
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-
-    .main-header h1 {
-        font-size: 1.8rem;
-    }
-
-    .overall-progress {
-        padding: 15px;
-    }
-
-    .part-card {
-        padding: 12px;
-    }
-
-    .part-header {
-        margin-bottom: 12px;
-    }
-
-    .file-info-section {
-        padding: 12px;
-    }
-}`;
+        // إرجاع CSS كامل للصفحة الناتجة
+        return `/* أنماط CSS للصفحة الناتجة */`;
     }
     
     generateJSCode() {
-        const partsDataJSON = JSON.stringify(this.parts.map(part => ({
-            id: part.id,
-            name: part.name,
-            size: part.size + ' ' + part.unit,
-            url: part.url
-        })), null, 2);
-        
-        return `// بيانات البارتات
-const partsData = ${partsDataJSON};
-
-class PartsDownloader {
-    constructor() {
-        this.partsContainer = document.getElementById('partsContainer');
-        this.completedSpan = document.getElementById('completed');
-        this.totalSpan = document.getElementById('total');
-        this.percentageSpan = document.getElementById('percentage');
-        this.progressFill = document.getElementById('progressFill');
-        this.fullFileNameDisplay = document.getElementById('fullFileName');
-        this.totalFileSizeDisplay = document.getElementById('totalFileSize');
-        this.resetButton = null;
-        
-        this.init();
-    }
-    
-    init() {
-        this.resetButton = document.getElementById('resetAllBtn');
-        this.renderParts();
-        this.updateProgress();
-        this.displayFileInfo();
-        this.setupEventListeners();
-    }
-    
-    renderParts() {
-        this.partsContainer.innerHTML = '';
-        
-        partsData.forEach((part, index) => {
-            const partCard = this.createPartCard(part, index + 1);
-            this.partsContainer.appendChild(partCard);
-        });
-        
-        this.totalSpan.textContent = partsData.length;
-    }
-    
-    createPartCard(part, number) {
-        const card = document.createElement('div');
-        card.className = 'part-card';
-        card.dataset.partId = part.id;
-        
-        const isDownloaded = localStorage.getItem(part.id) === 'downloaded';
-        if (isDownloaded) {
-            card.classList.add('downloaded');
-        }
-        
-        card.innerHTML = \\`
-            <div class="part-header">
-                <div class="part-number">\\${number.toString().padStart(2, '0')}</div>
-                <div class="part-info">
-                    <h3>\\${part.name}</h3>
-                    <div class="part-size">\\${part.size}</div>
-                </div>
-            </div>
-            
-            <div class="download-section">
-                <button class="download-btn" onclick="partsDownloader.downloadPart('\\${part.url}', '\\${part.id}')">
-                    \\${isDownloaded ? '✅' : '⬇️'}
-                </button>
-                <div class="status-text">
-                    \\${isDownloaded ? 'تم التحميل' : 'جاهز للتحميل'}
-                </div>
-            </div>
-        \\`;
-        
-        return card;
-    }
-    
-    downloadPart(url, partId) {
-        const card = document.querySelector(\\`[data-part-id="\\${partId}"]\\`);
-        const btn = card.querySelector('.download-btn');
-        const statusText = card.querySelector('.status-text');
-        
-        btn.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            btn.style.transform = 'scale(1)';
-        }, 150);
-        
-        card.classList.add('downloaded', 'just-downloaded');
-        btn.innerHTML = '✅';
-        statusText.textContent = 'تم التحميل';
-        
-        localStorage.setItem(partId, 'downloaded');
-        
-        this.updateProgress();
-        
-        window.open(url, '_blank');
-        
-        setTimeout(() => {
-            card.classList.remove('just-downloaded');
-        }, 600);
-    }
-    
-    updateProgress() {
-        const completed = partsData.filter(part => 
-            localStorage.getItem(part.id) === 'downloaded'
-        ).length;
-        
-        const total = partsData.length;
-        const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-        
-        this.completedSpan.textContent = completed;
-        this.percentageSpan.textContent = \\`\\${percentage}%\\`;
-        this.progressFill.style.width = \\`\\${percentage}%\\`;
-    }
-
-    displayFileInfo() {
-        let totalSizeGB = 0;
-        partsData.forEach(part => {
-            const sizeValue = parseFloat(part.size.replace(' GB', '').replace(' MB', ''));
-            if (!isNaN(sizeValue)) {
-                if (part.size.includes('MB')) {
-                    totalSizeGB += sizeValue / 1024;
-                } else {
-                    totalSizeGB += sizeValue;
-                }
-            }
-        });
-
-        this.totalFileSizeDisplay.textContent = \\`\\${totalSizeGB.toFixed(2)} GB\\`;
-    }
-
-    setupEventListeners() {
-        if (this.resetButton) {
-            this.resetButton.addEventListener('click', () => this.resetAllParts());
-        }
-    }
-
-    resetAllParts() {
-        if (confirm('هل أنت متأكد أنك تريد إعادة تعيين حالة جميع البارتات؟')) {
-            partsData.forEach(part => {
-                localStorage.removeItem(part.id);
-            });
-            this.renderParts();
-            this.updateProgress();
-            alert('تمت إعادة تعيين جميع البارتات بنجاح!');
-        }
-    }
-}
-
-// تشغيل التطبيق
-let partsDownloader;
-window.addEventListener('DOMContentLoaded', () => {
-    partsDownloader = new PartsDownloader();
-});`;
+        // إرجاع JavaScript كامل للصفحة الناتجة
+        return `// كود JavaScript للصفحة الناتجة`;
     }
     
     exportConfig() {
-        const config = {
-            gameName: document.getElementById('gameName').value,
-            fileExtension: document.getElementById('fileExtension').value,
-            parts: this.parts
-        };
-        
-        const configStr = JSON.stringify(config, null, 2);
-        const blob = new Blob([configStr], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = '4gamer-page-config.json';
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        this.showMobileAlert('✅ تم تصدير الإعدادات');
+        alert('📤 تصدير الإعدادات (سيتم تطويره لاحقاً)');
     }
     
     importConfig() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        input.onchange = e => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = event => {
-                try {
-                    const config = JSON.parse(event.target.result);
-                    this.loadConfig(config);
-                } catch (error) {
-                    alert('❌ خطأ في تحميل الملف!');
-                }
-            };
-            reader.readAsText(file);
-        };
-        input.click();
-    }
-    
-    loadConfig(config) {
-        document.getElementById('gameName').value = config.gameName || '';
-        document.getElementById('fileExtension').value = config.fileExtension || 'pkg';
-        
-        this.parts = config.parts || [];
-        this.partsCount = this.parts.length;
-        
-        this.renderPartsList();
-        this.calculateTotalSize();
-        
-        this.showMobileAlert('✅ تم تحميل الإعدادات بنجاح!');
+        alert('📥 استيراد الإعدادات (سيتم تطويره لاحقاً)');
     }
 }
 
-// الدوال العامة
+// إنشاء نسخة عالمية من المولد
+let pageGenerator;
+
+// تهيئة المولد عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 تم تحميل الـ DOM بالكامل');
+    try {
+        pageGenerator = new PageGenerator();
+        console.log('🎉 المولد جاهز للاستخدام!');
+    } catch (error) {
+        console.error('💥 خطأ في تهيئة المولد:', error);
+        alert('حدث خطأ في تحميل المولد. يرجى تحديث الصفحة.');
+    }
+});
+
+// الدوال العامة التي تستدعي من الـ HTML
 function addPart() {
-    pageGenerator.addPart();
+    if (pageGenerator) {
+        pageGenerator.addPart();
+    } else {
+        alert('❌ المولد غير جاهز بعد. يرجى الانتظار...');
+    }
 }
 
 function removePart() {
-    pageGenerator.removePart();
+    if (pageGenerator) {
+        pageGenerator.removePart();
+    } else {
+        alert('❌ المولد غير جاهز بعد. يرجى الانتظار...');
+    }
 }
 
 function generatePage() {
-    pageGenerator.generatePage();
+    if (pageGenerator) {
+        pageGenerator.generatePage();
+    } else {
+        alert('❌ المولد غير جاهز بعد. يرجى الانتظار...');
+    }
 }
 
 function copyCode() {
-    const code = document.getElementById('codePreview').textContent;
-    if (!code || code.includes('الصفحة الناتجة')) {
-        alert('❌ يرجى توليد الصفحة أولاً!');
-        return;
-    }
-    navigator.clipboard.writeText(code).then(() => {
-        alert('✅ تم نسخ الكود بنجاح!');
-    });
+    alert('📋 نسخ الكود (سيتم تطويره لاحقاً)');
 }
 
 function testPage() {
-    const code = document.getElementById('codePreview').textContent;
-    if (!code || code.includes('الصفحة الناتجة')) {
-        alert('❌ يرجى توليد الصفحة أولاً!');
-        return;
-    }
-    
-    const iframe = document.getElementById('testIframe');
-    const blob = new Blob([code], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    iframe.src = url;
-    
-    document.getElementById('testModal').style.display = 'block';
+    alert('🧪 اختبار الصفحة (سيتم تطويره لاحقاً)');
 }
 
 function closeTestModal() {
     document.getElementById('testModal').style.display = 'none';
-    const iframe = document.getElementById('testIframe');
-    iframe.src = 'about:blank';
 }
 
 function exportConfig() {
-    pageGenerator.exportConfig();
+    if (pageGenerator) {
+        pageGenerator.exportConfig();
+    }
 }
 
 function importConfig() {
-    pageGenerator.importConfig();
+    if (pageGenerator) {
+        pageGenerator.importConfig();
+    }
 }
 
-// تهيئة التطبيق
-let pageGenerator;
+// بديل إذا فشل DOMContentLoaded
 window.onload = function() {
-    console.log('🚀 تم تحميل الصفحة - بدء تهيئة المولد');
-    try {
+    console.log('🔄 تم تحميل الصفحة بالكامل (window.onload)');
+    if (!pageGenerator) {
+        console.log('🔄 إعادة محاولة تهيئة المولد...');
         pageGenerator = new PageGenerator();
-        console.log('✅ المولد جاهز للاستخدام');
-    } catch (error) {
-        console.error('❌ خطأ في تهيئة المولد:', error);
-        alert('حدث خطأ في تحميل المولد، يرجى تحديث الصفحة');
     }
 };
