@@ -10,29 +10,33 @@ body {
     background: linear-gradient(135deg, rgb(0, 18, 10) 0%, rgb(0, 8, 9) 100%);
     min-height: 100vh;
     color: #f0f0f0;
+    line-height: 1.6;
 }
 
 .generator-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
+    width: 100%;
 }
 
 /* Header */
 .generator-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     color: white;
+    padding: 0 10px;
 }
 
 .generator-header h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     margin-bottom: 15px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    word-wrap: break-word;
 }
 
 .generator-header p {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     opacity: 0.9;
 }
 
@@ -41,14 +45,16 @@ body {
     background: rgba(255,255,255,0.08);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 30px;
+    padding: clamp(15px, 3vw, 30px);
+    margin-bottom: 25px;
     border: 1px solid rgba(255,255,255,0.1);
+    width: 100%;
 }
 
 /* Form Styles */
 .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 label {
@@ -56,7 +62,7 @@ label {
     margin-bottom: 8px;
     font-weight: 600;
     color: #eee;
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
 }
 
 input, select {
@@ -68,6 +74,8 @@ input, select {
     background: rgba(255,255,255,0.1);
     color: white;
     transition: all 0.3s ease;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 input:focus, select:focus {
@@ -84,18 +92,21 @@ input::placeholder {
 .actions-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 12px;
+    width: 100%;
 }
 
 button {
-    padding: 12px 20px;
+    padding: clamp(10px, 2.5vw, 12px) clamp(15px, 3vw, 20px);
     border: none;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: clamp(14px, 3vw, 16px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
+    min-height: 44px;
+    width: 100%;
 }
 
 .btn-primary {
@@ -122,14 +133,16 @@ button {
 .btn-generate {
     background: linear-gradient(135deg, #27ae60, #2ecc71);
     color: white;
-    font-size: 1.1rem;
-    padding: 15px 25px;
+    font-size: clamp(1rem, 3vw, 1.1rem);
+    padding: clamp(12px, 3vw, 15px) clamp(20px, 4vw, 25px);
 }
 
 .btn-copy, .btn-test {
     background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
-    margin: 0 5px;
+    margin: 5px;
+    width: auto;
+    min-width: 120px;
 }
 
 button:hover {
@@ -143,22 +156,29 @@ button:active {
 
 /* Parts Management */
 .parts-management {
-    margin: 30px 0;
+    margin: 25px 0;
+    width: 100%;
 }
 
 .parts-management h3 {
     color: white;
     margin-bottom: 20px;
-    font-size: 1.3rem;
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
+    text-align: center;
+}
+
+.parts-list {
+    width: 100%;
 }
 
 .part-item {
     background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: clamp(15px, 3vw, 20px);
     margin-bottom: 15px;
     border: 1px solid rgba(255,255,255,0.1);
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .part-item:hover {
@@ -170,31 +190,38 @@ button:active {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .part-title {
     font-weight: 600;
     color: white;
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    word-break: break-word;
 }
 
 .remove-part-btn {
     background: #e74c3c;
     color: white;
     padding: 8px 15px;
-    font-size: 14px;
+    font-size: clamp(12px, 2.5vw, 14px);
+    min-height: auto;
+    width: auto;
 }
 
 .part-fields {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 15px;
+    width: 100%;
 }
 
 .size-input {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
 }
 
 .size-input input {
@@ -202,7 +229,7 @@ button:active {
 }
 
 .size-unit {
-    min-width: 60px;
+    min-width: 70px;
     background: rgba(255,255,255,0.1);
     color: white;
     border: 2px solid rgba(255,255,255,0.2);
@@ -212,20 +239,22 @@ button:active {
 .total-size-display {
     background: linear-gradient(135deg, rgb(22, 185, 31), rgb(51, 224, 52));
     color: white;
-    padding: 20px;
+    padding: clamp(15px, 3vw, 20px);
     border-radius: 10px;
     text-align: center;
-    font-size: 1.3rem;
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
     font-weight: 600;
     margin: 20px 0;
+    width: 100%;
 }
 
 /* Control Buttons */
 .control-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 30px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 25px;
+    width: 100%;
 }
 
 .btn-generate {
@@ -237,26 +266,30 @@ button:active {
     color: white;
     margin-bottom: 20px;
     text-align: center;
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
 }
 
 .preview-actions {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .code-preview {
     background: #1e1e1e;
     color: #d4d4d4;
-    padding: 20px;
+    padding: clamp(15px, 3vw, 20px);
     border-radius: 8px;
     font-family: 'Courier New', monospace;
     white-space: pre-wrap;
-    max-height: 600px;
+    max-height: 60vh;
     overflow-y: auto;
     direction: ltr;
     border: 1px solid #444;
+    font-size: clamp(12px, 2.5vw, 14px);
+    width: 100%;
 }
 
 .placeholder {
@@ -264,6 +297,7 @@ button:active {
     color: #888;
     font-style: italic;
     padding: 40px;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
 }
 
 /* Modal */
@@ -275,7 +309,8 @@ button:active {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.9);
+    padding: 10px;
 }
 
 .modal-content {
@@ -283,10 +318,11 @@ button:active {
     margin: 2% auto;
     padding: 20px;
     border-radius: 15px;
-    width: 90%;
+    width: 95%;
     max-width: 1000px;
     max-height: 90vh;
     overflow: hidden;
+    position: relative;
 }
 
 .close {
@@ -295,6 +331,10 @@ button:active {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    z-index: 1001;
 }
 
 .close:hover {
@@ -304,7 +344,7 @@ button:active {
 .modal-iframe-container {
     width: 100%;
     height: 70vh;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .modal-iframe-container iframe {
@@ -318,9 +358,10 @@ button:active {
 /* Footer */
 .generator-footer {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 30px;
     color: #aaa;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    padding: 0 10px;
 }
 
 .generator-footer a {
@@ -333,49 +374,99 @@ button:active {
     text-decoration: underline;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Parts List Styles */
+.parts-list {
+    margin-top: 20px;
+}
+
+.no-parts {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 40px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    border: 2px dashed rgba(255,255,255,0.2);
+}
+
+/* Responsive Grid for Parts Fields */
+@media (min-width: 768px) {
+    .part-fields {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .control-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .actions-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1024px) {
+    .generator-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        align-items: start;
+    }
+    
+    .input-section, .preview-section {
+        margin-bottom: 0;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
     .generator-container {
         padding: 10px;
     }
     
-    .generator-header h1 {
-        font-size: 2rem;
-    }
-    
     .input-section, .preview-section {
-        padding: 20px;
+        padding: 15px;
     }
     
-    .part-fields {
-        grid-template-columns: 1fr;
+    .part-item {
+        padding: 12px;
     }
     
-    .actions-row, .control-buttons {
-        grid-template-columns: 1fr;
+    .part-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .part-title {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .remove-part-btn {
+        width: 100%;
     }
     
     .preview-actions {
         flex-direction: column;
     }
     
-    .modal-content {
-        width: 95%;
-        margin: 5% auto;
+    .btn-copy, .btn-test {
+        width: 100%;
+        margin: 5px 0;
     }
 }
 
-@media (max-width: 480px) {
-    .generator-header h1 {
-        font-size: 1.8rem;
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+    button:hover {
+        transform: none;
     }
     
-    .part-item {
-        padding: 15px;
+    .part-item:hover {
+        background: rgba(255,255,255,0.05);
     }
     
-    .code-preview {
-        padding: 15px;
-        font-size: 14px;
+    button:active {
+        transform: scale(0.98);
     }
-  }
+}
